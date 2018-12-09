@@ -12,7 +12,6 @@ public class AppPreferences {
     final private String SHARED_PREF_STRING = "com.example.arch1.testapplication";
     final static public String APP_BOOK_RESPONSE = "bookresponse";
     final static public String APP_LAST_READ_CHAPTER = "lastchapter";
-    final static public String APP_LAST_BOOK_AUDIO_URL = "lastaudiourl";
     final static public String APP_SOUND_RESPONSE = "soundresponse";
 
     public AppPreferences(Context context) {

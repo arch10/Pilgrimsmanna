@@ -1,19 +1,11 @@
-package com.gigaworks.tech.bible.fragments;
-
+package com.gigaworks.tech.bible;
 
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Spinner;
 
-import com.gigaworks.tech.bible.AppPreferences;
-import com.gigaworks.tech.bible.MainActivity;
-import com.gigaworks.tech.bible.R;
 import com.gigaworks.tech.bible.adapter.DailyReadAdapter;
 import com.gigaworks.tech.bible.container.DailyRead;
 
@@ -23,8 +15,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-
-public class YeshuFragment extends Fragment {
+public class YeshuActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private DailyReadAdapter adapter;
@@ -32,30 +23,22 @@ public class YeshuFragment extends Fragment {
     private AppPreferences preferences;
     private ArrayList<DailyRead> months;
 
-    public YeshuFragment() {
-        // Required empty public constructor
-    }
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_yeshu);
+
         months = new ArrayList<>();
-    }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_yeshu, container, false);
-
-        preferences = AppPreferences.getInstance(getActivity());
-        recyclerView = view.findViewById(R.id.rv_daily);
+        preferences = AppPreferences.getInstance(YeshuActivity.this);
+        recyclerView = findViewById(R.id.rv_daily);
 
         months = getMonthData("part1");
 
-        adapter = new DailyReadAdapter(months, getActivity(), new DailyReadAdapter.OnMonthClickListener() {
+        adapter = new DailyReadAdapter(months, YeshuActivity.this, new DailyReadAdapter.OnMonthClickListener() {
             @Override
             public void onMonthClick(DailyRead main, int position) {
-                Intent intent = new Intent(getActivity(),MainActivity.class);
+                Intent intent = new Intent(YeshuActivity.this,MainActivity.class);
                 intent.putExtra("soundUrl",main.getUrl());
                 intent.putExtra("trackTitle",main.getTitle());
                 intent.putExtra("category",main.getCategory());
@@ -64,12 +47,10 @@ public class YeshuFragment extends Fragment {
             }
         });
 
-        manager = new LinearLayoutManager(getActivity().getApplicationContext());
+        manager = new LinearLayoutManager(YeshuActivity.this.getApplicationContext());
 
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(manager);
-
-        return view;
     }
 
     private ArrayList<DailyRead> getMonthData(String category) {

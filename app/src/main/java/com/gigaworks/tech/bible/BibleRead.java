@@ -1,5 +1,6 @@
 package com.gigaworks.tech.bible;
 
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -22,21 +23,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 
-public class BibleRead extends AppCompatActivity implements LoaderManager.LoaderCallbacks<String>,
-        View.OnClickListener, MediaPlayer.OnPreparedListener {
+public class BibleRead extends AppCompatActivity implements View.OnClickListener,
+        MediaPlayer.OnPreparedListener {
 
     private Toolbar toolbar;
     private Spinner chapterSpinner;
-    private String JOHN_URL = "http://biblebook.pilgrimsmanna.com/biblebook/android/getBook.php";
-    private String audioHomeURL = "http://biblebook.pilgrimsmanna.com/biblebook/";
-    private String currentAudioURL = audioHomeURL + "john_1.mp3";
-    private ProgressBar progressBar, mediaProgressBar;
+    private String currentAudioURL = Constants.getAudioHome() + "john_1.mp3";
+    private ProgressBar mediaProgressBar;
     private TextView textView;
     private AppPreferences preferences;
     private ImageButton play,next,prev,pause;
     private Boolean isPrepared = false;
+    private String bookData = "";
+    private int currentChapter = 0;
 
     private static MediaPlayer mediaPlayer;
 
@@ -45,9 +47,9 @@ public class BibleRead extends AppCompatActivity implements LoaderManager.Loader
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bible_read);
 
+        //initializations
         toolbar = findViewById(R.id.toolbar);
         chapterSpinner = findViewById(R.id.sp_chapter);
-        progressBar = findViewById(R.id.progressBar);
         mediaProgressBar = findViewById(R.id.media_progressbar);
         textView = findViewById(R.id.tv_content);
         preferences = new AppPreferences(this);
@@ -57,41 +59,53 @@ public class BibleRead extends AppCompatActivity implements LoaderManager.Loader
         prev = findViewById(R.id.backward);
         pause = findViewById(R.id.pause);
 
+
         if(mediaPlayer == null)
             mediaPlayer = new MediaPlayer();
 
-        if(mediaPlayer!=null && !mediaPlayer.isPlaying()){
+        if(!mediaPlayer.isPlaying()){
             mediaPlayer = new MediaPlayer();
             mediaPlayer.setOnPreparedListener(this);
         }
 
+        Intent intent = getIntent();
+        String title = intent.getStringExtra(Constants.BOOK_TITLE);
+        bookData = intent.getStringExtra(Constants.BOOK_DATA);
+        int noOfChapters = intent.getIntExtra(Constants.BOOK_CHAPTERS,1);
+
         setSupportActionBar(toolbar);
         toolbar.setTitleTextColor(getResources().getColor(R.color.colorWhite));
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
-        setTitle("John");
+        setTitle(title);
 
         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(BibleRead.this,
                 R.layout.spinner_item_layout,
-                getResources().getStringArray(R.array.john_chapter));
+                getChapterList(noOfChapters));
 
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         chapterSpinner.setAdapter(spinnerAdapter);
 
-        chapterSpinner.setSelection(preferences.getIntegerPreference(AppPreferences.APP_LAST_READ_CHAPTER)-1);
-        currentAudioURL = preferences.getStringPreference(AppPreferences.APP_LAST_BOOK_AUDIO_URL);
+        //change this if adding more books
+        currentChapter = preferences.getIntegerPreference(AppPreferences.APP_LAST_READ_CHAPTER)-1;
+        chapterSpinner.setSelection(currentChapter);
 
-        getSupportLoaderManager().initLoader(0, null,this).forceLoad();
+        try {
+            String chapterResponse = getChapter(bookData);
+            setChapterContent(chapterResponse);
+            setAudioUrl(chapterResponse);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         chapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 try {
-                    String chapterResponse = getChapter(preferences.getStringPreference(AppPreferences.APP_BOOK_RESPONSE));
+                    String chapterResponse = getChapter(bookData);
                     setChapterContent(chapterResponse);
                     setAudioUrl(chapterResponse);
                     preferences.setIntegerPreference(AppPreferences.APP_LAST_READ_CHAPTER,chapterSpinner.getSelectedItemPosition()+1);
-                    preferences.setStringPreference(AppPreferences.APP_LAST_BOOK_AUDIO_URL,currentAudioURL);
                     isPrepared = false;
 
                     if(mediaPlayer!=null) {
@@ -115,12 +129,7 @@ public class BibleRead extends AppCompatActivity implements LoaderManager.Loader
             }
         });
 
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onBackPressed();
-            }
-        });
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
         play.setOnClickListener(this);
         pause.setOnClickListener(this);
@@ -130,30 +139,13 @@ public class BibleRead extends AppCompatActivity implements LoaderManager.Loader
 
     }
 
-    @NonNull
-    @Override
-    public Loader onCreateLoader(int i, @Nullable Bundle bundle) {
-        progressBar.setVisibility(View.VISIBLE);
-        return new NetworkTask(BibleRead.this,JOHN_URL);
-    }
+    private ArrayList<String> getChapterList(int noOfChapters) {
+        ArrayList<String> chapters = new ArrayList<>();
 
-    @Override
-    public void onLoadFinished(@NonNull Loader loader, String string) {
-        progressBar.setVisibility(View.GONE);
-        preferences.setStringPreference(AppPreferences.APP_BOOK_RESPONSE,string);
-
-        try {
-            String chapterResponse = getChapter(preferences.getStringPreference(AppPreferences.APP_BOOK_RESPONSE));
-            setChapterContent(chapterResponse);
-            setAudioUrl(chapterResponse);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        for(int i=1; i<=noOfChapters; i++){
+            chapters.add("Chapter " + i);
         }
-    }
-
-    @Override
-    public void onLoaderReset(@NonNull Loader loader) {
-
+        return chapters;
     }
 
     private String getChapter(String response) throws JSONException {
@@ -184,7 +176,7 @@ public class BibleRead extends AppCompatActivity implements LoaderManager.Loader
 
     private void setAudioUrl(String string) throws JSONException {
         JSONObject jsonObject = new JSONObject(string);
-        currentAudioURL =audioHomeURL + (jsonObject.getString("soundfile"));
+        currentAudioURL = Constants.getAudioHome() + (jsonObject.getString("soundfile"));
     }
 
     private void playAudio() {
@@ -270,12 +262,14 @@ public class BibleRead extends AppCompatActivity implements LoaderManager.Loader
 
     private void playNextChapter() {
         int count = chapterSpinner.getAdapter().getCount();
-        if(count > preferences.getIntegerPreference(AppPreferences.APP_LAST_READ_CHAPTER))
-            chapterSpinner.setSelection(preferences.getIntegerPreference(AppPreferences.APP_LAST_READ_CHAPTER));
+        int curr = chapterSpinner.getSelectedItemPosition();
+        if(count > curr + 1)
+            chapterSpinner.setSelection(curr + 1);
     }
 
     private void playLastChapter() {
-        if((preferences.getIntegerPreference(AppPreferences.APP_LAST_READ_CHAPTER)-2) >= 0)
-            chapterSpinner.setSelection(preferences.getIntegerPreference(AppPreferences.APP_LAST_READ_CHAPTER)-2);
+        int curr = chapterSpinner.getSelectedItemPosition();
+        if(curr > 0)
+            chapterSpinner.setSelection(curr - 1);
     }
 }

@@ -6,25 +6,9 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/bible"
-            android:title="Gujarati Bible"
-            android:icon="@drawable/ic_book"/>
-        <item
-            android:id="@+id/nav_daily"
-            android:title="Hindi Daily Bread"
-            android:icon="@drawable/ic_today_black_24dp"/>
-        <item
-            android:id="@+id/nav_yeshu"
-            android:title="Yeshu Masih Ka Jeevan"
-            android:icon="@drawable/ic_cross"/>
-        <item
-            android:id="@+id/nav_tools"
-            android:title="Tools"
-            android:visible="false"
-            android:icon="@drawable/ic_menu_manage"/>
-        <item
-            android:id="@+id/nav_coaching"
-            android:title="Coaching"
-            android:icon="@drawable/ic_coach"/>
+            android:title="Bible Read"
+            android:icon="@drawable/ic_book"
+            android:checked="true"/>
     </group>
 
     <item android:title="App">

@@ -5,11 +5,18 @@
     android:layout_height="match_parent"
     tools:context=".fragments.BibleFragment">
 
-    <include
-        android:id="@+id/john"
-        android:layout_height="wrap_content"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_home"
         android:layout_width="match_parent"
-        layout="@layout/book_layout"
-        android:layout_margin="16dp"/>
+        android:layout_height="match_parent"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp" />
+
+    <ProgressBar
+        android:id="@+id/pb_home"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
 
 </FrameLayout>
