@@ -45,6 +45,9 @@
         <activity
             android:name=".YeshuActivity"
             android:label="Yeshu Masih ka Jeevan"
+            android:parentActivityName=".HomeActivity" />
+        <activity android:name=".BooksActivity"
+            android:label="Gujarati Bible"
             android:parentActivityName=".HomeActivity"></activity>
     </application>
 

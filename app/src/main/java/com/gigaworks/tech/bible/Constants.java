@@ -8,7 +8,8 @@ public class Constants {
     private static String GET_SOUND_URL = ANDROID_HOME +"getSound.php";
     private static String GET_BOOK_URL = ANDROID_HOME + "getBook.php";
     private static String YESHU_KA_JEEVAN = "Yeshu Masih Ka Jeevan";
-    private static String MONTHLY_BREAD = "Hindi Daily Bread Monthly";
+    private static String MONTHLY_BREAD = "Hindi Daily Bread";
+    private static String GUJARATI_BIBLE = "Gujarati Bible";
 
     public static String BOOK_TITLE = "book.name";
     public static String BOOK_DATA = "book.data";
@@ -32,5 +33,9 @@ public class Constants {
 
     public static String getMonthlyBread() {
         return MONTHLY_BREAD;
+    }
+
+    public static String getGujaratiBible() {
+        return GUJARATI_BIBLE;
     }
 }

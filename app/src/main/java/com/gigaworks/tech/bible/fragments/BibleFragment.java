@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.gigaworks.tech.bible.AppPreferences;
 import com.gigaworks.tech.bible.BibleRead;
+import com.gigaworks.tech.bible.BooksActivity;
 import com.gigaworks.tech.bible.Constants;
 import com.gigaworks.tech.bible.DailyActivity;
 import com.gigaworks.tech.bible.MainActivity;
@@ -60,35 +61,20 @@ public class BibleFragment extends Fragment {
         linearLayoutManager = new LinearLayoutManager(getActivity());
         recyclerView = view.findViewById(R.id.rv_home);
 
-        HomeViewModel model = ViewModelProviders.of(getActivity()).get(HomeViewModel.class);
-
-        model.getBookData(preferences.getStringPreference(AppPreferences.APP_BOOK_RESPONSE))
-                .observe(getActivity(), data -> {
-                    if (data.equals("")) {
-                        progressBar.setVisibility(View.VISIBLE);
-                        recyclerView.setVisibility(View.GONE);
-                    } else {
-                        progressBar.setVisibility(View.GONE);
-                        recyclerView.setVisibility(View.VISIBLE);
-                        adapter = new BookAdapter(getBookTitles(data), (position, title) -> {
-                            if (title.equals(Constants.getYeshuKaJeevan())) {
-                                Intent intent = new Intent(getActivity(), YeshuActivity.class);
-                                startActivity(intent);
-                            } else if (title.equals(Constants.getMonthlyBread())) {
-                                Intent intent = new Intent(getActivity(), DailyActivity.class);
-                                startActivity(intent);
-                            } else {
-                                JSONArray array = getBook(data, title);
-                                Intent intent = new Intent(getActivity(), BibleRead.class);
-                                intent.putExtra(Constants.BOOK_TITLE, title);
-                                intent.putExtra(Constants.BOOK_DATA, array.toString());
-                                intent.putExtra(Constants.BOOK_CHAPTERS, array.length());
-                                startActivity(intent);
-                            }
-                        });
-                        recyclerView.setAdapter(adapter);
-                    }
-                });
+        recyclerView.setVisibility(View.VISIBLE);
+        adapter = new BookAdapter(getBookTitles(), (position, title) -> {
+            if (title.equals(Constants.getYeshuKaJeevan())) {
+                Intent intent = new Intent(getActivity(), YeshuActivity.class);
+                startActivity(intent);
+            } else if (title.equals(Constants.getMonthlyBread())) {
+                Intent intent = new Intent(getActivity(), DailyActivity.class);
+                startActivity(intent);
+            } else if (title.equals(Constants.getGujaratiBible())) {
+                Intent intent = new Intent(getActivity(), BooksActivity.class);
+                startActivity(intent);
+            }
+        });
+        recyclerView.setAdapter(adapter);
 
 
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -97,45 +83,14 @@ public class BibleFragment extends Fragment {
         return view;
     }
 
-    private JSONArray getBook(String data, String title) {
-        JSONArray array = new JSONArray();
+    private ArrayList<String> getBookTitles() {
 
-        try {
-            JSONArray list = new JSONArray(data);
-            for(int i=0; i<list.length(); i++) {
-                JSONObject object = list.getJSONObject(i);
-                if(object.getString("title").equals(title)){
-                    array.put(object);
-                }
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return array;
-    }
+        ArrayList<String> list = new ArrayList<>();
+        list.add(Constants.getGujaratiBible());
+        list.add(Constants.getYeshuKaJeevan());
+        list.add(Constants.getMonthlyBread());
 
-    private ArrayList<String> getBookTitles(String data) {
-        String bookResponse = data;
-
-        try {
-            ArrayList<String> list = new ArrayList<>();
-            JSONArray array = new JSONArray(bookResponse);
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
-                String title = object.getString("title");
-                if (!list.contains(title)) {
-                    list.add(title);
-                }
-            }
-
-            list.add(Constants.getYeshuKaJeevan());
-            list.add(Constants.getMonthlyBread());
-
-            return list;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return new ArrayList<>();
-        }
+        return list;
     }
 
 }
