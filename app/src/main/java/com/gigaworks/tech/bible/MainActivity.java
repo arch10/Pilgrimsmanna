@@ -97,8 +97,8 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
         prev.setOnClickListener(this);
 
         //setting animation
-        animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rotate);
-        animation.setFillAfter(true);
+//        animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rotate);
+//        animation.setFillAfter(true);
 
         mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
             @Override
@@ -106,7 +106,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
                 pause.setVisibility(View.GONE);
                 mediaProgressBar.setVisibility(GONE);
                 play.setVisibility(VISIBLE);
-                imageTrack.clearAnimation();
+                //imageTrack.clearAnimation();
             }
         });
 
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
         //start media player
         mediaPlayer.start();
 
-        imageTrack.startAnimation(animation);
+        //imageTrack.startAnimation(animation);
         //dismiss dialog
         mediaProgressBar.setVisibility(View.GONE);
         play.setVisibility(View.GONE);
@@ -142,11 +142,11 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
 
         mediaPlayer.start();
 
-        imageTrack.startAnimation(animation);
+        //imageTrack.startAnimation(animation);
     }
 
     private void pressedNext() {
-        if(pos < arrayList.size()){
+        if(pos < arrayList.size() - 1){
             pos++;
             DailyRead main = arrayList.get(pos);
             String url = main.getUrl();

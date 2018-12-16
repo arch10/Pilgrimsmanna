@@ -99,8 +99,8 @@ public class HomeActivity extends AppCompatActivity
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, "PilgrimsManna");
-            String msg = "Hey, checkout this Bible app. Go to this link " +
-                    "to download this app now.\n\n";
+            String msg = "Hey, checkout this really cool app called Pilgrims Manna. Go to this link " +
+                    "to download this app now.\n\n" + Constants.getPlayStoreLink();
             intent.putExtra(Intent.EXTRA_TEXT, msg);
             startActivity(Intent.createChooser(intent, "Choose one"));
         } else if (id == R.id.nav_contact) {

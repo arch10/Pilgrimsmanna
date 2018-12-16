@@ -10,6 +10,7 @@ public class Constants {
     private static String YESHU_KA_JEEVAN = "Yeshu Masih Ka Jeevan";
     private static String MONTHLY_BREAD = "Hindi Daily Bread";
     private static String GUJARATI_BIBLE = "Gujarati Bible";
+    private static String PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=com.gigaworks.tech.bible&hl=en";
 
     public static String BOOK_TITLE = "book.name";
     public static String BOOK_DATA = "book.data";
@@ -38,4 +39,9 @@ public class Constants {
     public static String getGujaratiBible() {
         return GUJARATI_BIBLE;
     }
+
+    public static String getPlayStoreLink() {
+        return PLAY_STORE_LINK;
+    }
+
 }
