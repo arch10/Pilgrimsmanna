@@ -25,6 +25,7 @@ import com.gigaworks.tech.bible.MainActivity;
 import com.gigaworks.tech.bible.R;
 import com.gigaworks.tech.bible.YeshuActivity;
 import com.gigaworks.tech.bible.adapter.BookAdapter;
+import com.gigaworks.tech.bible.adapter.TitleAdapter;
 import com.gigaworks.tech.bible.viewmodel.HomeViewModel;
 
 import org.json.JSONArray;
@@ -37,7 +38,7 @@ public class BibleFragment extends Fragment {
 
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
-    private BookAdapter adapter;
+    private TitleAdapter adapter;
     private ProgressBar progressBar;
     private AppPreferences preferences;
 
@@ -62,7 +63,7 @@ public class BibleFragment extends Fragment {
         recyclerView = view.findViewById(R.id.rv_home);
 
         recyclerView.setVisibility(View.VISIBLE);
-        adapter = new BookAdapter(getBookTitles(), (position, title) -> {
+        adapter = new TitleAdapter(getBookTitles(), (position, title) -> {
             if (title.equals(Constants.getYeshuKaJeevan())) {
                 Intent intent = new Intent(getActivity(), YeshuActivity.class);
                 startActivity(intent);

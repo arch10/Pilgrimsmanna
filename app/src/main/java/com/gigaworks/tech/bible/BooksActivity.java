@@ -6,14 +6,19 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.gigaworks.tech.bible.adapter.BookAdapter;
+import com.gigaworks.tech.bible.container.Book;
+import com.gigaworks.tech.bible.container.Chapter;
+import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class BooksActivity extends AppCompatActivity {
 
@@ -35,13 +40,15 @@ public class BooksActivity extends AppCompatActivity {
 
         data = preferences.getStringPreference(AppPreferences.APP_BOOK_RESPONSE);
 
-        adapter = new BookAdapter(getBookTitles(data), (position, title) -> {
-                JSONArray array = getBook(data, title);
-                Intent intent = new Intent(this, BibleRead.class);
-                intent.putExtra(Constants.BOOK_TITLE, title);
-                intent.putExtra(Constants.BOOK_DATA, array.toString());
-                intent.putExtra(Constants.BOOK_CHAPTERS, array.length());
-                startActivity(intent);
+        adapter = new BookAdapter(getBooks(data), (position, book) -> {
+            //JSONArray array = getBook(data, title);
+            Gson gson = new Gson();
+            String jsonString = gson.toJson(book.getChapters());
+            Intent intent = new Intent(this, BibleRead.class);
+            intent.putExtra(Constants.BOOK_TITLE, book.getTitle());
+            intent.putExtra(Constants.BOOK_DATA, jsonString);
+            intent.putExtra(Constants.BOOK_CHAPTERS, book.getChapters().size());
+            startActivity(intent);
         });
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(linearLayoutManager);
@@ -53,9 +60,9 @@ public class BooksActivity extends AppCompatActivity {
 
         try {
             JSONArray list = new JSONArray(data);
-            for(int i=0; i<list.length(); i++) {
+            for (int i = 0; i < list.length(); i++) {
                 JSONObject object = list.getJSONObject(i);
-                if(object.getString("title").equals(title)){
+                if (object.getString("title").equals(title)) {
                     array.put(object);
                 }
             }
@@ -66,14 +73,15 @@ public class BooksActivity extends AppCompatActivity {
     }
 
     private ArrayList<String> getBookTitles(String data) {
-        String bookResponse = data;
 
         try {
             ArrayList<String> list = new ArrayList<>();
-            JSONArray array = new JSONArray(bookResponse);
-            for (int i = 0; i < array.length(); i++) {
-                JSONObject object = array.getJSONObject(i);
-                String title = object.getString("title");
+            JSONObject jsonObject = new JSONObject(data);
+            Iterator<String> books = jsonObject.keys();
+            while (books.hasNext()) {
+                String key = books.next();
+                JSONArray array = jsonObject.getJSONArray(key);
+                String title = array.getJSONObject(0).getString("title");
                 if (!list.contains(title)) {
                     list.add(title);
                 }
@@ -83,6 +91,42 @@ public class BooksActivity extends AppCompatActivity {
             e.printStackTrace();
             return new ArrayList<>();
         }
+    }
+
+    private ArrayList<Book> getBooks(String data) {
+        ArrayList<Book> list = new ArrayList<>();
+
+        try {
+            JSONObject jsonObject = new JSONObject(data);
+            Iterator<String> books = jsonObject.keys();
+            while (books.hasNext()) {
+                String key = books.next();
+                JSONArray array = jsonObject.getJSONArray(key);
+                Book book = new Book();
+                ArrayList<Chapter> chapters = new ArrayList<>();
+
+                for (int i = 0; i < array.length(); i++) {
+                    JSONObject chapterObj = array.getJSONObject(i);
+                    Chapter chapter = new Chapter();
+                    if (i == 0) {
+                        book.setId(Integer.parseInt(chapterObj.getString("book_id")));
+                        book.setCategory(chapterObj.getString("category"));
+                        book.setTitle(chapterObj.getString("title"));
+                    }
+                    chapter.setId(Integer.parseInt(chapterObj.getString("id")));
+                    chapter.setChapterNo(Integer.parseInt(chapterObj.getString("chapter")));
+                    chapter.setText(chapterObj.getString("text"));
+                    chapter.setSoundfile(chapterObj.getString("soundfile"));
+                    chapter.setBlocked(Boolean.parseBoolean(chapterObj.getString("blocked")));
+                    chapters.add(chapter);
+                }
+                book.setChapters(chapters);
+                list.add(book);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return list;
     }
 
 }

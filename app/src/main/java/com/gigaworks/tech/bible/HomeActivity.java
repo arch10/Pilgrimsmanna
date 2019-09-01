@@ -1,8 +1,10 @@
 package com.gigaworks.tech.bible;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.design.widget.NavigationView;
@@ -55,12 +57,12 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         //Load book data from internet
-        model.getBookData(preferences.getStringPreference(AppPreferences.APP_BOOK_RESPONSE))
+        model.getBookData(bookResponse)
                 .observe(this, data ->
                         preferences.setStringPreference(AppPreferences.APP_BOOK_RESPONSE, data));
 
         //Load sound data from internet
-        model.getSoundData(preferences.getStringPreference(AppPreferences.APP_SOUND_RESPONSE))
+        model.getSoundData(soundResponse)
                 .observe(this, data ->
                         preferences.setStringPreference(AppPreferences.APP_SOUND_RESPONSE, data));
 
@@ -83,7 +85,6 @@ public class HomeActivity extends AppCompatActivity
         }
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
 
@@ -99,7 +100,7 @@ public class HomeActivity extends AppCompatActivity
             Intent intent = new Intent(Intent.ACTION_SEND);
             intent.setType("text/plain");
             intent.putExtra(Intent.EXTRA_SUBJECT, "PilgrimsManna");
-            String msg = "Hey, checkout this really cool app called Pilgrims Manna. Go to this link " +
+            String msg = "Hey, checkout this really cool app called PilgrimsManna. Go to this link " +
                     "to download this app now.\n\n" + Constants.getPlayStoreLink();
             intent.putExtra(Intent.EXTRA_TEXT, msg);
             startActivity(Intent.createChooser(intent, "Choose one"));

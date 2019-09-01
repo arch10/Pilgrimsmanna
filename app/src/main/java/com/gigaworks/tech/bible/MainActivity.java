@@ -100,14 +100,11 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
 //        animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rotate);
 //        animation.setFillAfter(true);
 
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer) {
-                pause.setVisibility(View.GONE);
-                mediaProgressBar.setVisibility(GONE);
-                play.setVisibility(VISIBLE);
-                //imageTrack.clearAnimation();
-            }
+        mediaPlayer.setOnCompletionListener(mediaPlayer -> {
+            pause.setVisibility(View.GONE);
+            mediaProgressBar.setVisibility(GONE);
+            play.setVisibility(VISIBLE);
+            //imageTrack.clearAnimation();
         });
 
     }

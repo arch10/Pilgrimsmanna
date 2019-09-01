@@ -13,17 +13,21 @@
         android:layout_height="wrap_content"
         android:background="?colorPrimary"
         android:elevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         tools:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <Spinner
             android:id="@+id/sp_chapter"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginEnd="16dp"
             android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
             android:layout_marginRight="8dp"
             android:spinnerMode="dialog"
-            tools:theme="@style/ThemeOverlay.AppCompat.Light"/>
+            android:backgroundTint="@color/colorWhite"
+            tools:theme="@style/ThemeOverlay.AppCompat.Dark" />
 
     </android.support.v7.widget.Toolbar>
 

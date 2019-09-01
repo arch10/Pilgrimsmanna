@@ -18,12 +18,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gigaworks.tech.bible.container.Chapter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class BibleRead extends AppCompatActivity implements View.OnClickListener,
@@ -38,7 +43,7 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
     private ImageButton play,next,prev,pause;
     private Boolean isPrepared = false;
     private String bookData = "";
-    private int currentChapter = 0;
+    private int currentChapter = 1;
 
     private static MediaPlayer mediaPlayer;
 
@@ -71,6 +76,9 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
         Intent intent = getIntent();
         String title = intent.getStringExtra(Constants.BOOK_TITLE);
         bookData = intent.getStringExtra(Constants.BOOK_DATA);
+        Gson gson = new Gson();
+        TypeToken<List<Chapter>> token = new TypeToken<List<Chapter>>() {};
+        List<Chapter> chapters = gson.fromJson(bookData, token.getType());
         int noOfChapters = intent.getIntExtra(Constants.BOOK_CHAPTERS,1);
 
         setSupportActionBar(toolbar);
@@ -87,40 +95,34 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
         chapterSpinner.setAdapter(spinnerAdapter);
 
         //change this if adding more books
-        currentChapter = preferences.getIntegerPreference(AppPreferences.APP_LAST_READ_CHAPTER)-1;
-        chapterSpinner.setSelection(currentChapter);
+        currentChapter = preferences.getIntegerPreference(title);
+        chapterSpinner.setSelection(currentChapter - 1);
 
-        try {
-            String chapterResponse = getChapter(bookData);
-            setChapterContent(chapterResponse);
-            setAudioUrl(chapterResponse);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
+        Chapter chapter = getChapter(chapters);
+        assert chapter != null;
+        setChapterContent(chapter);
+        setAudioUrl(chapter);
 
         chapterSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                try {
-                    String chapterResponse = getChapter(bookData);
-                    setChapterContent(chapterResponse);
-                    setAudioUrl(chapterResponse);
-                    preferences.setIntegerPreference(AppPreferences.APP_LAST_READ_CHAPTER,chapterSpinner.getSelectedItemPosition()+1);
-                    isPrepared = false;
+            public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
+                currentChapter = pos + 1;
+                Chapter chapter = getChapter(chapters);
+                assert chapter != null;
+                setChapterContent(chapter);
+                setAudioUrl(chapter);
+                preferences.setIntegerPreference(title, currentChapter);
+                isPrepared = false;
 
-                    if(mediaPlayer!=null) {
-                        mediaPlayer.pause();
-                        mediaPlayer.release();
-                        mediaPlayer = new MediaPlayer();
-                        mediaPlayer.setOnPreparedListener(BibleRead.this);
-                    }
-
-                    pause.setVisibility(View.GONE);
-                    play.setVisibility(View.VISIBLE);
-
-                } catch (JSONException e) {
-                    e.printStackTrace();
+                if(mediaPlayer!=null) {
+                    mediaPlayer.pause();
+                    mediaPlayer.release();
+                    mediaPlayer = new MediaPlayer();
+                    mediaPlayer.setOnPreparedListener(BibleRead.this);
                 }
+
+                pause.setVisibility(View.GONE);
+                play.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -148,23 +150,25 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
         return chapters;
     }
 
-    private String getChapter(String response) throws JSONException {
-        int chapter = chapterSpinner.getSelectedItemPosition() + 1;
-        JSONArray array = new JSONArray(response);
-        for(int i=0; i<array.length(); i++) {
-            JSONObject jsonObject = array.getJSONObject(i);
-            int resChapter = Integer.parseInt(jsonObject.getString("chapter"));
+    private Chapter getChapter(List<Chapter> chapters) {
+        Chapter chapter;
+        for(int i=0; i<chapters.size(); i++) {
+            chapter = chapters.get(i);
+            int chapterNo = chapter.getChapterNo();
 
-            if(resChapter == chapter){
-                return jsonObject.toString();
+            if(chapterNo == currentChapter){
+                return chapter;
             }
         }
-        return "";
+        return null;
     }
 
-    private void setChapterContent(String string) throws JSONException {
-        JSONObject jsonObject = new JSONObject(string);
-        textView.setText(refineText(jsonObject.getString("text")));
+    private void setChapterContent(Chapter chapter) {
+        textView.setText(refineText(chapter.getText()));
+    }
+
+    private void setAudioUrl(Chapter chapter) {
+        currentAudioURL = Constants.getAudioHome() + chapter.getSoundfile();
     }
 
     private String refineText(String text) {
@@ -172,11 +176,6 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
         text = text.replaceAll("<p>","");
         text = text.replaceAll("</p>","");
         return text;
-    }
-
-    private void setAudioUrl(String string) throws JSONException {
-        JSONObject jsonObject = new JSONObject(string);
-        currentAudioURL = Constants.getAudioHome() + (jsonObject.getString("soundfile"));
     }
 
     private void playAudio() {

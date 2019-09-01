@@ -61,9 +61,10 @@ public class HomeViewModel extends ViewModel {
                     .url(urls[0])
                     .build();
 
-            Response response = null;
+            Response response;
             try {
                 response = client.newCall(request).execute();
+                assert response.body() != null;
                 return response.body().string();
             } catch (IOException e) {
                 e.printStackTrace();

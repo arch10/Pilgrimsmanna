@@ -8,21 +8,22 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.gigaworks.tech.bible.R;
+import com.gigaworks.tech.bible.container.Book;
 
 import java.util.ArrayList;
 
 public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder> {
 
-    private ArrayList<String> bookList;
+    private ArrayList<Book> bookList;
     private OnBookClickListener listener;
 
-    public BookAdapter(ArrayList<String> bookList, OnBookClickListener listener) {
+    public BookAdapter(ArrayList<Book> bookList, OnBookClickListener listener) {
         this.bookList = bookList;
         this.listener = listener;
     }
 
     public interface OnBookClickListener {
-        void onBookClick(int position, String title);
+        void onBookClick(int position, Book book);
     }
 
     @NonNull
@@ -36,8 +37,9 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull BookViewHolder holder, int position) {
-        holder.title.setText(bookList.get(position));
-        holder.bind(listener, bookList.get(position));
+        Book currentBook = bookList.get(position);
+        holder.title.setText(currentBook.getTitle());
+        holder.bind(listener, currentBook);
     }
 
     @Override
@@ -54,8 +56,8 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
             title = itemView.findViewById(R.id.tv_title);
         }
 
-        public void bind(final OnBookClickListener listener, final String title) {
-            itemView.setOnClickListener((view) -> listener.onBookClick(getAdapterPosition(), title));
+        public void bind(final OnBookClickListener listener, final Book book) {
+            itemView.setOnClickListener((view) -> listener.onBookClick(getAdapterPosition(), book));
         }
     }
 }

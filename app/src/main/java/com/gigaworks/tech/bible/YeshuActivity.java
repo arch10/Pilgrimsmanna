@@ -35,16 +35,13 @@ public class YeshuActivity extends AppCompatActivity {
 
         months = getMonthData("part1");
 
-        adapter = new DailyReadAdapter(months, YeshuActivity.this, new DailyReadAdapter.OnMonthClickListener() {
-            @Override
-            public void onMonthClick(DailyRead main, int position) {
-                Intent intent = new Intent(YeshuActivity.this,MainActivity.class);
-                intent.putExtra("soundUrl",main.getUrl());
-                intent.putExtra("trackTitle",main.getTitle());
-                intent.putExtra("category",main.getCategory());
-                intent.putExtra("pos",position);
-                startActivity(intent);
-            }
+        adapter = new DailyReadAdapter(months, YeshuActivity.this, (main, position) -> {
+            Intent intent = new Intent(YeshuActivity.this,MainActivity.class);
+            intent.putExtra("soundUrl",main.getUrl());
+            intent.putExtra("trackTitle",main.getTitle());
+            intent.putExtra("category",main.getCategory());
+            intent.putExtra("pos",position);
+            startActivity(intent);
         });
 
         manager = new LinearLayoutManager(YeshuActivity.this.getApplicationContext());
@@ -73,11 +70,9 @@ public class YeshuActivity extends AppCompatActivity {
                     arrayList.add(read);
                 }
             }
-
-            return arrayList;
-
         }catch (JSONException e){
-            return arrayList;
+            e.printStackTrace();
         }
+        return arrayList;
     }
 }
