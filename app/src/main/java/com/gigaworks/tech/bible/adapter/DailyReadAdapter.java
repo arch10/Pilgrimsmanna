@@ -18,23 +18,21 @@ public class DailyReadAdapter extends RecyclerView.Adapter<DailyReadAdapter.Dail
 
     private ArrayList<DailyRead> titleArrayList;
     private OnMonthClickListener listener;
-    private Activity activity;
 
 
     public interface OnMonthClickListener {
         void onMonthClick(DailyRead main, int position);
     }
 
-    public DailyReadAdapter(ArrayList<DailyRead> titleArrayList, Activity activity, OnMonthClickListener listener){
+    public DailyReadAdapter(ArrayList<DailyRead> titleArrayList, OnMonthClickListener listener){
         this.titleArrayList = titleArrayList;
         this.listener = listener;
-        this.activity = activity;
     }
 
     @NonNull
     @Override
     public DailyReadViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        LayoutInflater inflater = LayoutInflater.from(activity);
+        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View view = inflater.inflate(R.layout.main_title_layout, viewGroup, false);
         DailyReadViewHolder holder = new DailyReadViewHolder(view);
         return holder;

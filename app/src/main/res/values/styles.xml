@@ -6,6 +6,7 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/lightGray</item>
     </style>
 
     <style name="AppTheme.NoToolBar" parent="Theme.AppCompat.Light.NoActionBar">
@@ -13,12 +14,14 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/lightGray</item>
     </style>
 
     <style name="DefMyActionBar" parent="Base.Widget.AppCompat.Light.ActionBar.Solid">
         <item name="android:titleTextAppearance">@color/colorWhite</item>
         <item name="android:colorControlNormal">@color/colorWhite</item>
         <item name="android:actionMenuTextColor">@color/colorWhite</item>
+        <item name="android:windowBackground">@color/lightGray</item>
     </style>
 
     <style name="AppTheme.NoActionBar">

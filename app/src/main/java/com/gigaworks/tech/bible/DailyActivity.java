@@ -39,8 +39,8 @@ public class DailyActivity extends AppCompatActivity {
         preferences = AppPreferences.getInstance(this);
         recyclerView = findViewById(R.id.rv_daily);
         monthSpinner.setSelection(0);
-        adapter = new DailyReadAdapter(months, DailyActivity.this, (DailyRead main, int position) -> {
-                Intent intent = new Intent(DailyActivity.this,MainActivity.class);
+        adapter = new DailyReadAdapter(months, (DailyRead main, int position) -> {
+                Intent intent = new Intent(DailyActivity.this, MainActivity.class);
                 intent.putExtra("soundUrl",main.getUrl());
                 intent.putExtra("trackTitle",main.getTitle());
                 intent.putExtra("category",main.getCategory());
@@ -58,8 +58,8 @@ public class DailyActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 String selectedItem = monthSpinner.getSelectedItem().toString().trim();
                 months = getMonthData(selectedItem);
-                adapter = new DailyReadAdapter(months, DailyActivity.this, (DailyRead main, int position) -> {
-                        Intent intent = new Intent(DailyActivity.this,MainActivity.class);
+                adapter = new DailyReadAdapter(months, (DailyRead main, int position) -> {
+                        Intent intent = new Intent(DailyActivity.this, MainActivity.class);
                         intent.putExtra("soundUrl",main.getUrl());
                         intent.putExtra("trackTitle",main.getTitle());
                         intent.putExtra("category",main.getCategory());

@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">Pilgrims Manna</string>
-
     <array name="month_array">
         <item>January</item>
         <item>February</item>
@@ -15,6 +13,8 @@
         <item>November</item>
         <item>December</item>
     </array>
+
+    <string name="app_name">Pilgrims Manna</string>
 
     <string name="title_activity_home">HomeActivity</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>

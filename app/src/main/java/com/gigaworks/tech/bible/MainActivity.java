@@ -1,5 +1,10 @@
 package com.gigaworks.tech.bible;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.ObjectAnimator;
+import android.animation.StateListAnimator;
+import android.animation.TimeAnimator;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.LinearInterpolator;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -42,6 +49,9 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
     private int pos;
     private AppPreferences preferences;
     private ArrayList<DailyRead> arrayList;
+    private Boolean hidePrevNext = false;
+    private RotateAnimation rotate;
+    private ObjectAnimator anim;
 
 
     private static MediaPlayer mediaPlayer;
@@ -72,11 +82,28 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_black_24dp);
         toolbar.setTitle("Now Playing");
 
+        rotate = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotate.setDuration(2000);
+        rotate.setRepeatCount(-1);
+        rotate.setInterpolator(new LinearInterpolator());
+
+        anim = ObjectAnimator.ofFloat(imageTrack, "rotation", 0, 360);
+        anim.setDuration(2000);
+        anim.setRepeatCount(-1);
+        anim.setInterpolator(new LinearInterpolator());
+        anim.setRepeatMode(ObjectAnimator.RESTART);
+
         Intent intent = getIntent();
         songUrl = intent.getStringExtra("soundUrl");
         trackTitle.setText(intent.getStringExtra("trackTitle"));
         category = intent.getStringExtra("category");
         pos = intent.getIntExtra("pos",0);
+        hidePrevNext = intent.getBooleanExtra("hide", false);
+
+        if(hidePrevNext) {
+            next.setVisibility(View.INVISIBLE);
+            prev.setVisibility(View.INVISIBLE);
+        }
 
         songUrl = audioHomeURL+songUrl;
 
@@ -96,15 +123,15 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
         next.setOnClickListener(this);
         prev.setOnClickListener(this);
 
-        //setting animation
-//        animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rotate);
-//        animation.setFillAfter(true);
+//        setting animation
+        animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.rotate);
+        animation.setFillAfter(true);
 
         mediaPlayer.setOnCompletionListener(mediaPlayer -> {
             pause.setVisibility(View.GONE);
             mediaProgressBar.setVisibility(GONE);
             play.setVisibility(VISIBLE);
-            //imageTrack.clearAnimation();
+            anim.pause();
         });
 
     }
@@ -114,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
         //start media player
         mediaPlayer.start();
 
-        //imageTrack.startAnimation(animation);
+        anim.start();
         //dismiss dialog
         mediaProgressBar.setVisibility(View.GONE);
         play.setVisibility(View.GONE);
@@ -129,7 +156,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
         play.setVisibility(VISIBLE);
 
         mediaPlayer.pause();
-        imageTrack.clearAnimation();
+        anim.pause();
     }
 
     private void pressedPlay() {
@@ -139,7 +166,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
 
         mediaPlayer.start();
 
-        //imageTrack.startAnimation(animation);
+        anim.resume();
     }
 
     private void pressedNext() {
@@ -162,7 +189,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
             pause.setVisibility(View.GONE);
             play.setVisibility(View.VISIBLE);
             mediaProgressBar.setVisibility(GONE);
-            imageTrack.clearAnimation();
+            anim.pause();
         }
     }
 
@@ -186,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements MediaPlayer.OnPre
             pause.setVisibility(View.GONE);
             play.setVisibility(View.VISIBLE);
             mediaProgressBar.setVisibility(GONE);
-            imageTrack.clearAnimation();
+            anim.pause();
         }
     }
 

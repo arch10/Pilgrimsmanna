@@ -11,6 +11,9 @@ public class Constants {
     private static String MONTHLY_BREAD = "Hindi Daily Bread";
     private static String GUJARATI_BIBLE = "Bible";
     private static String PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=com.gigaworks.tech.bible&hl=en";
+    private static String DAILY_DEVOTIONAL = "Daily Devotionals";
+    private static String DAILY_DEVOTION = "Daily Devotion";
+    private static String AUDIO_BOOKS = "Audio Books";
 
     public static String BOOK_TITLE = "book.name";
     public static String BOOK_DATA = "book.data";
@@ -44,4 +47,15 @@ public class Constants {
         return PLAY_STORE_LINK;
     }
 
+    public static String getDailyDevotional() {
+        return DAILY_DEVOTIONAL;
+    }
+
+    public static String getDailyDevotion() {
+        return DAILY_DEVOTION;
+    }
+
+    public static String getAudioBooks() {
+        return AUDIO_BOOKS;
+    }
 }

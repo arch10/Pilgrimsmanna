@@ -35,7 +35,7 @@ public class YeshuActivity extends AppCompatActivity {
 
         months = getMonthData("part1");
 
-        adapter = new DailyReadAdapter(months, YeshuActivity.this, (main, position) -> {
+        adapter = new DailyReadAdapter(months, (main, position) -> {
             Intent intent = new Intent(YeshuActivity.this,MainActivity.class);
             intent.putExtra("soundUrl",main.getUrl());
             intent.putExtra("trackTitle",main.getTitle());

@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.gigaworks.tech.bible">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher_foreground"
@@ -49,9 +47,18 @@
             android:name=".YeshuActivity"
             android:label="Yeshu Masih ka Jeevan"
             android:parentActivityName=".HomeActivity" />
-        <activity android:name=".BooksActivity"
+        <activity
+            android:name=".BooksActivity"
             android:label="Gujarati Bible"
+            android:parentActivityName=".HomeActivity" />
+        <activity android:name=".AudioBookActivity"
+            android:label="Audio Books"
+            android:parentActivityName=".HomeActivity"/>
+        <activity android:name=".DailyDevotionalActivity"
+            android:label="Daily Devotionals"
             android:parentActivityName=".HomeActivity"/>
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>
