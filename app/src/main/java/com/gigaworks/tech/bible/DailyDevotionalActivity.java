@@ -39,13 +39,15 @@ public class DailyDevotionalActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, DailyActivity.class);
                 startActivity(intent);
             } else if (title.equals(Constants.getDailyDevotion())){
-                Intent intent = new Intent(this, MainActivity.class);
-                DailyRead dailyRead = getDailyDevotion("Daily Devotion");
-                intent.putExtra("soundUrl",dailyRead.getUrl());
-                intent.putExtra("trackTitle",dailyRead.getTitle());
-                intent.putExtra("category","xyz");
-                intent.putExtra("pos",0);
-                intent.putExtra("hide", true);
+//                Intent intent = new Intent(this, MainActivity.class);
+//                DailyRead dailyRead = getDailyDevotion("Daily Devotion");
+//                intent.putExtra("soundUrl",dailyRead.getUrl());
+//                intent.putExtra("trackTitle",dailyRead.getTitle());
+//                intent.putExtra("category","xyz");
+//                intent.putExtra("pos",0);
+//                intent.putExtra("hide", true);
+//                startActivity(intent);
+                Intent intent = new Intent(this, DailyActivity.class);
                 startActivity(intent);
             }
         });

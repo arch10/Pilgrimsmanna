@@ -33,8 +33,8 @@ public class AudioBookActivity extends AppCompatActivity {
 
         preferences = AppPreferences.getInstance(this);
         int spanCount = 2;
-        gridLayoutManager = new GridLayoutManager(this, spanCount);
-        //linearLayoutManager = new LinearLayoutManager(this);
+        //gridLayoutManager = new GridLayoutManager(this, spanCount);
+        linearLayoutManager = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.rv_audio_books);
 
         dailyReads = getAllAudioBooks();
@@ -44,8 +44,8 @@ public class AudioBookActivity extends AppCompatActivity {
         });
         recyclerView.setAdapter(adapter);
 
-        //recyclerView.setLayoutManager(linearLayoutManager);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        recyclerView.setLayoutManager(linearLayoutManager);
+        //recyclerView.setLayoutManager(gridLayoutManager);
         recyclerView.setHasFixedSize(true);
     }
 

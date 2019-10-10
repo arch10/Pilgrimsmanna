@@ -1,10 +1,14 @@
 package com.gigaworks.tech.bible;
 
+import android.app.Notification;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,6 +35,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.gigaworks.tech.bible.App.CHANNEL_ID;
+
 
 public class BibleRead extends AppCompatActivity implements View.OnClickListener,
         MediaPlayer.OnPreparedListener {
@@ -38,12 +45,16 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
     private Spinner chapterSpinner;
     private String currentAudioURL = Constants.getAudioHome() + "john_1.mp3";
     private ProgressBar mediaProgressBar;
+    private SeekBar seekBar;
     private TextView textView;
     private AppPreferences preferences;
     private ImageButton play,next,prev,pause;
     private Boolean isPrepared = false;
     private String bookData = "";
     private int currentChapter = 1;
+    private Handler mHandler = new Handler();
+    private String title;
+    private NotificationManagerCompat managerCompat;
 
     private static MediaPlayer mediaPlayer;
 
@@ -57,7 +68,9 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
         chapterSpinner = findViewById(R.id.sp_chapter);
         mediaProgressBar = findViewById(R.id.media_progressbar);
         textView = findViewById(R.id.tv_content);
+        seekBar = findViewById(R.id.seekBar);
         preferences = new AppPreferences(this);
+        managerCompat = NotificationManagerCompat.from(this);
 
         play = findViewById(R.id.play);
         next = findViewById(R.id.forward);
@@ -73,8 +86,21 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
             mediaPlayer.setOnPreparedListener(this);
         }
 
+        //Make sure you update Seekbar on UI thread
+        BibleRead.this.runOnUiThread(new Runnable() {
+
+            @Override
+            public void run() {
+                if(mediaPlayer != null){
+                    int mCurrentPosition = mediaPlayer.getCurrentPosition() / 1000;
+                    seekBar.setProgress(mCurrentPosition);
+                }
+                mHandler.postDelayed(this, 1000);
+            }
+        });
+
         Intent intent = getIntent();
-        String title = intent.getStringExtra(Constants.BOOK_TITLE);
+        title = intent.getStringExtra(Constants.BOOK_TITLE);
         bookData = intent.getStringExtra(Constants.BOOK_DATA);
         Gson gson = new Gson();
         TypeToken<List<Chapter>> token = new TypeToken<List<Chapter>>() {};
@@ -180,7 +206,7 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
 
     private void playAudio() {
         if(isPrepared) {
-            Toast.makeText(this, "Play again", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "Play again", Toast.LENGTH_SHORT).show();
             mediaPlayer.start();
             play.setVisibility(View.GONE);
             pause.setVisibility(View.VISIBLE);
@@ -225,7 +251,7 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
         // give data to mediaPlayer
         mediaPlayer.setDataSource(audioUrl);
         // media player asynchronous preparation
-        mediaPlayer.prepareAsync();
+        mediaPlayer.prepare();
 
         //loading media
         play.setVisibility(View.INVISIBLE);
@@ -249,12 +275,22 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
         //start media player
         mediaPlayer.start();
 
+        Notification notification = new NotificationCompat.Builder(getApplicationContext(), CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_music_note_black_24dp)
+                .setContentTitle(title)
+                .setContentText(chapterSpinner.getSelectedItem().toString())
+                .addAction(R.drawable.ic_action_rewind, "Previous", null)
+                .addAction(R.drawable.ic_action_play,"Play", null)
+                .addAction(R.drawable.ic_action_fast_forward, "Next", null)
+                .setStyle(new android.support.v4.media.app.NotificationCompat.MediaStyle().setShowActionsInCompactView(1,2,3))
+                .build();
+        managerCompat.notify(1, notification);
         //dismiss dialog
         mediaProgressBar.setVisibility(View.GONE);
         play.setVisibility(View.GONE);
         pause.setVisibility(View.VISIBLE);
 
-        Toast.makeText(BibleRead.this, currentAudioURL, Toast.LENGTH_SHORT).show();
+//        Toast.makeText(BibleRead.this, currentAudioURL, Toast.LENGTH_SHORT).show();
         isPrepared = true;
 
     }
