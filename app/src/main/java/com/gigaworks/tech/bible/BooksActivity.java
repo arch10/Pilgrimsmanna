@@ -109,7 +109,7 @@ public class BooksActivity extends AppCompatActivity {
                     JSONObject chapterObj = array.getJSONObject(i);
                     Chapter chapter = new Chapter();
                     if (i == 0) {
-                        book.setId(Integer.parseInt(chapterObj.getString("book_id")));
+                        book.setId(Integer.parseInt(chapterObj.getString("sort")));
                         book.setCategory(chapterObj.getString("category"));
                         book.setTitle(chapterObj.getString("title"));
                     }
