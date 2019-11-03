@@ -3,15 +3,11 @@ package com.gigaworks.tech.bible;
 import android.app.Notification;
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
-import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,10 +22,6 @@ import android.widget.Toast;
 import com.gigaworks.tech.bible.container.Chapter;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -248,10 +240,11 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
     }
 
     private void loadMediaPlayer(String audioUrl) throws IOException{
+//        Toast.makeText(this, audioUrl, Toast.LENGTH_SHORT).show();
         // give data to mediaPlayer
         mediaPlayer.setDataSource(audioUrl);
         // media player asynchronous preparation
-        mediaPlayer.prepare();
+        mediaPlayer.prepareAsync();
 
         //loading media
         play.setVisibility(View.INVISIBLE);
