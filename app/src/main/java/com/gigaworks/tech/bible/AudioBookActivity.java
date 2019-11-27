@@ -22,7 +22,6 @@ public class AudioBookActivity extends AppCompatActivity {
     private AppPreferences preferences;
     private RecyclerView recyclerView;
     private LinearLayoutManager linearLayoutManager;
-    private GridLayoutManager gridLayoutManager;
     private TitleAdapter adapter;
     private List<DailyRead> dailyReads;
 
@@ -32,8 +31,6 @@ public class AudioBookActivity extends AppCompatActivity {
         setContentView(R.layout.activity_audio_book);
 
         preferences = AppPreferences.getInstance(this);
-        int spanCount = 2;
-        //gridLayoutManager = new GridLayoutManager(this, spanCount);
         linearLayoutManager = new LinearLayoutManager(this);
         recyclerView = findViewById(R.id.rv_audio_books);
 

@@ -8,7 +8,7 @@ public class Constants {
     private static String GET_SOUND_URL = ANDROID_HOME +"getSound.php";
     private static String GET_BOOK_URL = ANDROID_HOME + "getBook.php";
     private static String YESHU_KA_JEEVAN = "Yeshu Masih Ka Jeevan";
-    private static String MONTHLY_BREAD = "Hindi Daily Bread";
+    private static String MONTHLY_BREAD = "Sharing God's Secrets";
     private static String GUJARATI_BIBLE = "Bible";
     private static String PLAY_STORE_LINK = "https://play.google.com/store/apps/details?id=com.gigaworks.tech.bible&hl=en";
     private static String DAILY_DEVOTIONAL = "Daily Devotionals";
