@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.widget.Button;
+import android.widget.RadioGroup;
 
 import com.gigaworks.tech.bible.adapter.ListAdapter;
 import com.gigaworks.tech.bible.container.ListData;
@@ -22,14 +23,12 @@ public class SettingsActivity extends AppCompatActivity {
 
     private RecyclerView recyclerView;
     private ListAdapter mAdapter;
-    private Dialog precisionDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        precisionDialog = new Dialog(this);
         recyclerView = findViewById(R.id.rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
 
@@ -38,6 +37,8 @@ public class SettingsActivity extends AppCompatActivity {
                 case 0:
                     showTextSizeDialog();
                     break;
+                case 1:
+                    showNightModeDialog();
                 default:
                     break;
             }
@@ -54,6 +55,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         ArrayList<ListData> list = new ArrayList<>();
         data = new ListData(getString(R.string.text_size), getTextSizeDesc(), R.drawable.ic_format_size_black_24dp);
+        list.add(data);
+        data = new ListData(getString(R.string.night_mode), getNightModeDesc(), R.drawable.ic_brightness_2_black_24dp);
         list.add(data);
 
         return list;
@@ -74,7 +77,26 @@ public class SettingsActivity extends AppCompatActivity {
         preferences.setIntegerPreference(AppPreferences.APP_TEXT_SIZE, size);
     }
 
+    private boolean getNightMode() {
+        AppPreferences preferences = AppPreferences.getInstance(this);
+        return preferences.getBooleanPreference(AppPreferences.APP_NIGHT_MODE, false);
+    }
+
+    private void setNightMode(boolean val) {
+        AppPreferences preferences = AppPreferences.getInstance(this);
+        preferences.setBooleanPreference(AppPreferences.APP_NIGHT_MODE, val);
+    }
+
+    private String getNightModeDesc() {
+        if(getNightMode()) {
+            return "On";
+        } else {
+            return "Off";
+        }
+    }
+
     private void showTextSizeDialog() {
+        Dialog precisionDialog = new Dialog(this);
         precisionDialog.setCanceledOnTouchOutside(true);
         precisionDialog.setContentView(R.layout.precision_popup);
 
@@ -96,6 +118,43 @@ public class SettingsActivity extends AppCompatActivity {
             precisionDialog.dismiss();
             mAdapter.setList(setListData());
             recyclerView.setAdapter(mAdapter);
+        });
+        precisionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        precisionDialog.getWindow().getAttributes().windowAnimations = R.style.WindowTransition;
+        precisionDialog.show();
+    }
+
+    private void showNightModeDialog() {
+        Dialog precisionDialog = new Dialog(this);
+        precisionDialog.setCanceledOnTouchOutside(true);
+        precisionDialog.setContentView(R.layout.night_mode_popup);
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int width = dm.widthPixels;
+        Objects.requireNonNull(precisionDialog.getWindow()).setLayout((int) (width * 0.9), ConstraintLayout.LayoutParams.WRAP_CONTENT);
+
+        RadioGroup radioGroup = precisionDialog.findViewById(R.id.rg_angle);
+
+        boolean nightMode = getNightMode();
+        if (nightMode) {
+            radioGroup.check(R.id.on);
+        } else {
+            radioGroup.check(R.id.off);
+        }
+
+        radioGroup.setOnCheckedChangeListener((group, checkedId) -> {
+            switch (checkedId) {
+                case R.id.on:
+                    setNightMode(true);
+                    break;
+                case R.id.off:
+                    setNightMode(false);
+                    break;
+            }
+            mAdapter.setList(setListData());
+            recyclerView.setAdapter(mAdapter);
+            precisionDialog.dismiss();
         });
         precisionDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         precisionDialog.getWindow().getAttributes().windowAnimations = R.style.WindowTransition;

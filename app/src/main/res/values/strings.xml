@@ -30,6 +30,9 @@
     <string name="text_size">Text Size</string>
     <string name="cancel">Cancel</string>
     <string name="set">Set</string>
+    <string name="night_mode">Night mode</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
 
 
 </resources>

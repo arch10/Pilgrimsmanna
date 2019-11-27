@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -47,6 +49,7 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
     private Handler mHandler = new Handler();
     private String title;
     private NotificationManagerCompat managerCompat;
+    private ScrollView scrollView;
 
     private static MediaPlayer mediaPlayer;
 
@@ -63,6 +66,7 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
         seekBar = findViewById(R.id.seekBar);
         preferences = new AppPreferences(this);
         managerCompat = NotificationManagerCompat.from(this);
+        scrollView = findViewById(R.id.scrollView2);
 
         play = findViewById(R.id.play);
         next = findViewById(R.id.forward);
@@ -71,6 +75,15 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
 
         int textSize = preferences.getIntegerPreference(AppPreferences.APP_TEXT_SIZE, 18);
         textView.setTextSize(textSize);
+
+        boolean nightMode = preferences.getBooleanPreference(AppPreferences.APP_NIGHT_MODE, false);
+        if(nightMode) {
+            scrollView.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_background));
+            textView.setTextColor(ContextCompat.getColor(this, R.color.light_background));
+        } else {
+            scrollView.setBackgroundColor(ContextCompat.getColor(this, R.color.light_background));
+            textView.setTextColor(ContextCompat.getColor(this, R.color.dark_background));
+        }
 
         if(mediaPlayer == null)
             mediaPlayer = new MediaPlayer();

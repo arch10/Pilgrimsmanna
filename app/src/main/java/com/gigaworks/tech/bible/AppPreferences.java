@@ -14,6 +14,7 @@ public class AppPreferences {
     final static public String APP_LAST_READ_CHAPTER = "lastchapter";
     final static public String APP_SOUND_RESPONSE = "soundresponse";
     final static public String APP_TEXT_SIZE = "app.text.size";
+    final static public String APP_NIGHT_MODE = "app.night.mode";
 
     public AppPreferences(Context context) {
         ctx = context;
@@ -36,6 +37,10 @@ public class AppPreferences {
 
     public boolean getBooleanPreference(String key) {
         return sharedPreferences.getBoolean(key, true);
+    }
+
+    public boolean getBooleanPreference(String key, boolean def) {
+        return sharedPreferences.getBoolean(key, def);
     }
 
     public void setBooleanPreference(String key, Boolean value) {
