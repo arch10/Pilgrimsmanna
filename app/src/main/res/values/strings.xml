@@ -27,6 +27,9 @@
     <string name="address">Isaac Emmanuel , Raghunath Vihar , Sector 14, Kharghar Navi Mumbai 410210.</string>
     <string name="website">www.pilgrimsmanna.com</string>
     <string name="phone">+91 99673 64360</string>
+    <string name="text_size">Text Size</string>
+    <string name="cancel">Cancel</string>
+    <string name="set">Set</string>
 
 
 </resources>

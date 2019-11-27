@@ -69,6 +69,8 @@ public class BibleRead extends AppCompatActivity implements View.OnClickListener
         prev = findViewById(R.id.backward);
         pause = findViewById(R.id.pause);
 
+        int textSize = preferences.getIntegerPreference(AppPreferences.APP_TEXT_SIZE, 18);
+        textView.setTextSize(textSize);
 
         if(mediaPlayer == null)
             mediaPlayer = new MediaPlayer();

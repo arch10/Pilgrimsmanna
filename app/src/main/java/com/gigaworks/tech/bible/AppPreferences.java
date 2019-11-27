@@ -13,6 +13,7 @@ public class AppPreferences {
     final static public String APP_BOOK_RESPONSE = "bookresponse";
     final static public String APP_LAST_READ_CHAPTER = "lastchapter";
     final static public String APP_SOUND_RESPONSE = "soundresponse";
+    final static public String APP_TEXT_SIZE = "app.text.size";
 
     public AppPreferences(Context context) {
         ctx = context;
@@ -44,6 +45,10 @@ public class AppPreferences {
 
     public int getIntegerPreference(String key) {
         return sharedPreferences.getInt(key,1);
+    }
+
+    public int getIntegerPreference(String key, int def) {
+        return sharedPreferences.getInt(key,def);
     }
 
     public void setIntegerPreference(String key, int value) {
