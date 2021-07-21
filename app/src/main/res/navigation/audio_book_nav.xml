@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/audio_book_nav"
+    app:startDestination="@id/audioBookFragment">
+
+    <fragment
+        android:id="@+id/audioBookFragment"
+        android:name="com.gigaworks.tech.bible.ui.audiobook.fragment.AudioBookFragment"
+        android:label="fragment_audio_book"
+        tools:layout="@layout/fragment_audio_book" >
+        <action
+            android:id="@+id/audioAction"
+            app:destination="@id/audioFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/audioFragment"
+        android:name="com.gigaworks.tech.bible.ui.audiobook.fragment.AudioFragment"
+        android:label="fragment_audio"
+        tools:layout="@layout/fragment_audio" >
+        <argument
+            android:name="audioBook"
+            app:argType="com.gigaworks.tech.bible.domain.Sound" />
+    </fragment>
+</navigation>

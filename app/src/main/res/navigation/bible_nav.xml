@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bible_nav"
+    app:startDestination="@id/bibleFragment">
+
+    <fragment
+        android:id="@+id/bibleFragment"
+        android:name="com.gigaworks.tech.bible.ui.bible.fragment.BibleFragment"
+        android:label="fragment_bible"
+        tools:layout="@layout/fragment_bible" >
+        <action
+            android:id="@+id/booksAction"
+            app:destination="@id/bibleBookFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bibleBookFragment"
+        android:name="com.gigaworks.tech.bible.ui.bible.fragment.BibleBookFragment"
+        android:label="fragment_bible_book"
+        tools:layout="@layout/fragment_bible_book" >
+        <argument
+            android:name="category"
+            app:argType="string"
+            android:defaultValue="gujarati" />
+        <argument
+            android:name="title"
+            app:argType="string"
+            android:defaultValue="" />
+        <action
+            android:id="@+id/actionRead"
+            app:destination="@id/bookReadFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookReadFragment"
+        android:name="com.gigaworks.tech.bible.ui.bible.fragment.BookReadFragment"
+        android:label="BookReadFragment"
+        tools:layout="@layout/fragment_book_read">
+        <argument
+            android:name="chapters"
+            app:argType="com.gigaworks.tech.bible.domain.Book[]" />
+    </fragment>
+</navigation>

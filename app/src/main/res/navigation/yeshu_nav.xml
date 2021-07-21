@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/yeshu_nav"
+    app:startDestination="@id/yeshuListFragment">
+
+    <fragment
+        android:id="@+id/yeshuListFragment"
+        android:name="com.gigaworks.tech.bible.ui.yeshu.fragment.YeshuListFragment"
+        android:label="YeshuListFragment"
+        tools:layout="@layout/fragment_yesu_list">
+        <action
+            android:id="@+id/playAudio"
+            app:destination="@id/audioFragment" />
+        <action
+            android:id="@+id/yeshuList"
+            app:destination="@id/yeshuItemFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/audioFragment"
+        android:name="com.gigaworks.tech.bible.ui.audiobook.fragment.AudioFragment"
+        android:label="fragment_audio"
+        tools:layout="@layout/fragment_audio" >
+        <argument
+            android:name="audioBook"
+            app:argType="com.gigaworks.tech.bible.domain.Sound" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/yeshuItemFragment"
+        android:name="com.gigaworks.tech.bible.ui.yeshu.fragment.YeshuItemFragment"
+        android:label="YeshuItemFragment"
+        tools:layout="@layout/fragment_yeshu_item">
+        <action
+            android:id="@+id/playAudio"
+            app:destination="@id/dailyReadAudioFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/dailyReadAudioFragment"
+        android:name="com.gigaworks.tech.bible.ui.daily.fragment.DailyReadAudioFragment"
+        android:label="DailyReadAudioFragment"
+        tools:layout="@layout/fragment_daily_read_audio">
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="soundList"
+            app:argType="com.gigaworks.tech.bible.domain.Sound[]" />
+    </fragment>
+</navigation>

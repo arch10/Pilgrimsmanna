@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/daily_devotional_nav"
+    app:startDestination="@id/dailyDevotionalFragment">
+
+    <fragment
+        android:id="@+id/dailyDevotionalFragment"
+        android:name="com.gigaworks.tech.bible.ui.daily.fragment.DailyDevotionalFragment"
+        android:label="fragment_daily_devotional"
+        tools:layout="@layout/fragment_daily_devotional" >
+        <action
+            android:id="@+id/dailyDevotionalAction"
+            app:destination="@id/dailyDevotionalListFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dailyDevotionalListFragment"
+        android:name="com.gigaworks.tech.bible.ui.daily.fragment.DailyDevotionalListFragment"
+        android:label="fragment_daily_devotional_list"
+        tools:layout="@layout/fragment_daily_devotional_list" >
+        <argument
+            android:name="title"
+            app:argType="string"/>
+        <action
+            android:id="@+id/actionPlay"
+            app:destination="@id/dailyReadAudioFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dailyReadAudioFragment"
+        android:name="com.gigaworks.tech.bible.ui.daily.fragment.DailyReadAudioFragment"
+        android:label="DailyReadAudioFragment"
+        tools:layout="@layout/fragment_daily_read_audio">
+        <argument
+            android:name="position"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <argument
+            android:name="soundList"
+            app:argType="com.gigaworks.tech.bible.domain.Sound[]" />
+    </fragment>
+</navigation>
